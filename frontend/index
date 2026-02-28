@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>MindTrace AI - Sentiment Analyzer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>MindTrace AI</h2>
+    <p class="subtitle">AI Powered Sentiment & Emotion Analyzer</p>
+
+    <textarea 
+        id="userText" 
+        rows="4" 
+        placeholder="Type your text here..."
+    ></textarea>
+
+    <button onclick="analyzeText()">Analyze</button>
+
+    <div class="result">
+        <p><strong>Sentiment:</strong> <span id="sentiment"></span></p>
+        <p><strong>Emotion:</strong> <span id="emotion"></span></p>
+        <p><strong>AI Reply:</strong> <span id="reply"></span></p>
+    </div>
+
+</div>
+
+<!-- JS Link -->
+<script src="script.js"></script>
+
+</body>
+</html>
