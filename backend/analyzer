@@ -1,0 +1,89 @@
+from transformers import pipeline
+
+# -------------------------
+# Load Models (only once)
+# -------------------------
+
+# Sentiment Model
+sentiment_model = pipeline(
+    "sentiment-analysis"
+)
+
+# Emotion Model
+emotion_model = pipeline(
+    "text-classification",
+    model="j-hartmann/emotion-english-distilroberta-base",
+    top_k=None
+)
+
+
+# -------------------------
+# Sentiment Function
+# -------------------------
+
+def analyze_sentiment(text):
+    result = sentiment_model(text)[0]
+
+    return {
+        "label": result["label"],
+        "score": result["score"]
+    }
+
+
+# -------------------------
+# Emotion Function
+# -------------------------
+
+def analyze_emotion(text):
+    results = emotion_model(text)
+
+    # Transformers nested list fix
+    if isinstance(results[0], list):
+        results = results[0]
+
+    emotion_scores = {}
+
+    for item in results:
+        emotion_scores[item["label"]] = item["score"]
+
+    primary_emotion = max(emotion_scores, key=emotion_scores.get)
+
+    return {
+        "primary_emotion": primary_emotion,
+        "emotion_scores": emotion_scores
+    }
+
+
+# -------------------------
+# AI Smart Response Generator
+# -------------------------
+
+def generate_response(emotion):
+    responses = {
+        "joy": "That's wonderful to hear! Keep spreading positivity 😊",
+        "sadness": "I'm really sorry you're feeling this way. Remember, tough times don't last forever.",
+        "anger": "Take a deep breath. It's okay to feel angry, but staying calm helps you think clearly.",
+        "fear": "It's completely normal to feel scared sometimes. You are stronger than you think.",
+        "surprise": "That sounds unexpected! Hope it turns out to be something positive.",
+        "disgust": "That sounds unpleasant. Try to distance yourself from what’s bothering you.",
+        "neutral": "Thanks for sharing. Would you like to talk more about it?"
+    }
+
+    return responses.get(emotion.lower(), "Thank you for sharing your thoughts.")
+
+
+# -------------------------
+# Main Analyzer Function
+# -------------------------
+
+def analyze_text(text):
+    sentiment = analyze_sentiment(text)
+    emotion = analyze_emotion(text)
+
+    ai_reply = generate_response(emotion["primary_emotion"])
+
+    return {
+        "sentiment": sentiment,
+        "emotion": emotion,
+        "ai_reply": ai_reply
+    }
